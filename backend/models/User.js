@@ -36,7 +36,11 @@ UserSchema.pre('save', async function(next) {
 
     const salt = await bcrypt.genSalt(10);
     this.password = await bcrypt.hash(this.password, salt)
-})
+});
+
+UserSchema.methods.checkPassword = async function(passwordForm){
+    return await bcrypt.compare(passwordForm, this.password)
+}
 
 const User = mongoose.model('User', UserSchema);
 
