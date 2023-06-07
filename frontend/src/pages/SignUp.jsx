@@ -43,12 +43,29 @@ const SignUp = () => {
 
     try {
 
-      const response = await axios.post('http://localhost:4000/api/users');
+      const response = await axios.post('http://localhost:4000/api/users/', 
+      {
+        name: Name, 
+        email: Email, 
+        password: Password
+      });
 
-      console.log(response)
+      setNotify({
+        message: response.data.message,
+        error: false
+      })
+
+      setName('')
+      setEmail('')
+      setPassword('')
+      setSecondPassword('')
       
     } catch (error) {
-      console.log(error)
+
+      setNotify({
+        message: error.response.data.message,
+        error: true
+      })
     }
 
 
