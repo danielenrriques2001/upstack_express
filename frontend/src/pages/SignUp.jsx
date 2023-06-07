@@ -43,7 +43,7 @@ const SignUp = () => {
 
     try {
 
-      const response = await axios.post('http://localhost:4000/api/users/', 
+      const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/users`, 
       {
         name: Name, 
         email: Email, 
