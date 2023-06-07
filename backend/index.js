@@ -14,7 +14,8 @@ dotenv.config();
 
 ConnectDB();
 
-const whiteList = [process.env.FRONTED_URL];
+const whiteList = [process.env.FRONTEND_URL];
+console.log(whiteList[0], 'hola')
 
 const corsOptions = {
     origin: function (origin, callback) {
