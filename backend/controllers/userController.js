@@ -1,7 +1,7 @@
 import User from '../models/User.js'
 import {generateID} from '../helpers/generateID.js'
 import { generateJWT } from '../helpers/generateJWT.js'
-import { emailSignUp } from '../helpers/email.js';
+import { emailSignUp, emailRecoverPassword } from '../helpers/email.js';
 
 const createUser =  async (req, res) => {       
 
@@ -99,17 +99,28 @@ const recoverPassword = async (req, res) => {
     const {email} = req.body;
 
    
-    const alreadyCreated = await User.findOne({email});
+    const user = await User.findOne({email});
 
 
-    if(!alreadyCreated) {
+    if(!user) {
         return res.status(404).json({message: 'User does not exits!'})
     }
 
     try {
 
-        User.token = generateJWT();
+        user.token = generateJWT();
+        await user.save();
+
+        emailRecoverPassword({
+            email: user.email,
+            name: user.name,
+            token: user.token,
+        })
+
+
+
         return res.status(200).json({message: 'A recovery email has been sent'})
+
         
     }  catch (error) {
         return res.status(400).json({message: error.message})
@@ -126,28 +137,22 @@ const validateToken = async (req, res) => {
 
     const {token} = req.params;
 
+
+    console.log(token)
+
     const user = await User.findOne({token});
 
     if(user) {
 
-        user.password = password;
+      
+        return res.json({ message: "Valid Token" });
 
-        user.token = '';
-
-        try {
-            await user.save();
-
-            return res.status(400).json({message: 'Password has been modified correctly!'});
-
-        } catch (error) {
-            console.log(error)
-        }
 
         
     } else {
 
         const error = new Error("Token not valid");
-        return res.status(403).json(
+        return res.status(404).json(
            { message: error.message}
         )
     }
@@ -163,18 +168,30 @@ const createNewPassword = async (req, res) => {
 
     const {token} = req.params;
     const {password} = req.body;
+
+
     
 
-    const validToken = await User.findOne({token});
+    const user = await User.findOne({token});
 
-    if(validToken) {
+    if(user) {
 
-        return res.status(400).json({message: 'User already exists!'})
+        user.password = password;
+        user.token = "";
+
+        try {
+            await user.save();
+            return res.status(200).json({message: 'User has been modified!'})
+        } catch (error) {
+            console.log(error)
+        }
+
+       
         
     } else {
 
         const error = new Error("Token not valid");
-        return res.status(403).json(
+        return res.status(404).json(
            { message: error.message}
         )
     }
