@@ -98,18 +98,21 @@ const recoverPassword = async (req, res) => {
 
     const {email} = req.body;
 
+   
     const alreadyCreated = await User.findOne({email});
 
-    if(alreadyCreated) {
-        return res.status(400).json({message: 'User already exists!'})
+
+    if(!alreadyCreated) {
+        return res.status(404).json({message: 'User does not exits!'})
     }
 
     try {
 
         User.token = generateJWT();
-        return res.status(400).json({message: 'A recovery email has been sent'})
-    }  catch (error) {
+        return res.status(200).json({message: 'A recovery email has been sent'})
         
+    }  catch (error) {
+        return res.status(400).json({message: error.message})
         
     }
 
