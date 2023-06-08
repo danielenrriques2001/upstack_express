@@ -32,6 +32,7 @@ const SignUp = () => {
       return
     }
     if(Password.length < 6) {
+
       setNotify({
           message: 'The Password too short!',
           error: true,
