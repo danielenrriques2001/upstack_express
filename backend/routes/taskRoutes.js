@@ -1,5 +1,5 @@
 import express from 'express';
-import { checkAuth } from '../middleware/checkAuth.js';
+import  checkAuth  from '../middleware/checkAuth.js';
 
 import {
     getTask,
