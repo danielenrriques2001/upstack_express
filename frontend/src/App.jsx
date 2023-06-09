@@ -7,11 +7,14 @@ import SignUp from './pages/SignUp'
 import ForgotPassword from '../src/pages/ForgotPassword'
 import NewPassword from '../src/pages/NewPassword'
 import ConfirmAccount from './pages/ConfirmAccount'
+import  { AuthProvider } from './context/AuthProvider'
 function App() {
   const [count, setCount] = useState(0)
 
   return (
+  
     <BrowserRouter>
+      <AuthProvider>
     <Routes>
         <Route path='/' element={<AuthLayout/>}>
           <Route index element={<Login/>}/>
@@ -21,7 +24,7 @@ function App() {
           <Route path='confirm/:id' element={<ConfirmAccount/>}/>
         </Route>
     </Routes>
-   
+    </AuthProvider>
     </BrowserRouter>
   )
 }
