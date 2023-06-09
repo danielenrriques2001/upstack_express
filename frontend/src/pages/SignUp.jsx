@@ -1,10 +1,10 @@
-
+import axiosClient from '../config/AxiosConfig'
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import Alert from '../components/Alert'
-import axios from 'axios'
 
 const SignUp = () => {
+
 
   const [Name, setName] = useState('')
   const [Email, setEmail] = useState('')
@@ -44,7 +44,7 @@ const SignUp = () => {
 
     try {
 
-      const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/users`, 
+      const response = await axiosClient.post(`/users`, 
       {
         name: Name, 
         email: Email, 

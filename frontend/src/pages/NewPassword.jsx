@@ -1,8 +1,7 @@
-import axios from 'axios'
 import {useState, useEffect} from 'react'
 import { Link, useParams, redirect } from 'react-router-dom'
 import Alert from '../components/Alert';
-
+import axiosClient  from '../config/AxiosConfig'
 
 const NewPassword = () => {
 
@@ -18,11 +17,14 @@ const NewPassword = () => {
     const checkToken = async () => {
       try {
         //TODO:
-          const {data} = await axios(`http://localhost:4000/api/users/forgot-password/${params?.token}`)
-
+          const {data} = await axiosClient(`/users/forgot-password/${params?.token}`)
           setValidToken(true)
+
       } catch (error) {
-        console.log(error)
+        SetNotify({
+          message: error.response.data.message,
+          error: true,
+      })
       }
     }
 
@@ -56,13 +58,15 @@ const NewPassword = () => {
 
     try {
 
-      const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/users/forgot-password/${params?.token}`, 
+      const response = await axiosClient.post(`/users/forgot-password/${params?.token}`, 
       {
           password
       });
 
+     
+
       SetNotify({
-        message: response.data.message,
+        message: response.data.message, 
         error: false
       })
       
@@ -90,7 +94,7 @@ const NewPassword = () => {
     <span className='text-slate-700 '>what it takes</span>
     </h1>
     <h2 className='text-3xl font-black text-gray-600 font-extralight'>
-      {ValidToken ? 'Change your Password now!' : 'Your token is not valid'}
+      Change your Password now!
     </h2>
     {
       message && <Alert alert={Notify}/>
