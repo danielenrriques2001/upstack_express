@@ -55,7 +55,8 @@ const authenticate = async (req, res) => {
 
     //check the password
     if(await user.checkPassword(password)) {
-        res.json({
+
+        return res.status(200).json({
             _id: user._id,
             name: user.name,
             email: user.email,
