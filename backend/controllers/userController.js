@@ -198,15 +198,10 @@ const createNewPassword = async (req, res) => {
     }
 
 
-
-
-
-
 }
 
 const profile = (req, res) => {
-    const {user} = req.body;
-    console.log('this is the body ----',user)
+    const {user} = req;
     res.json(user);
 }
 

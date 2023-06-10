@@ -1,5 +1,5 @@
 import User from "../models/User.js";
-import jwt from "jsonwebtoken";
+import jwt  from "jsonwebtoken";
 const checkAuth = async (req, res, next) => {
   let token;
   if (
@@ -15,7 +15,10 @@ const checkAuth = async (req, res, next) => {
         "-password -confirmed -token -createdAt -updatedAt -__v"
       );
 
-      return next();
+      console.log(decoded)
+
+       return next();
+
     } catch (error) {
       return res.status(404).json({ message: "A error ocurred" });
     }
