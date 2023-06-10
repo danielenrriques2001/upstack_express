@@ -38,7 +38,7 @@ const getProject = async (req, res ) => {
 
 const createProject = async (req, res ) => {
 
-    const project = new Project(red.body);
+    const project = new Project(req.body);
 
     project.owner = req.user._id;
 
