@@ -9,52 +9,65 @@ const ProjectProvider = ({children}) => {
 
     
     const [projects, setProjects] = useState([]);
+    const [Notify, SetNotify] = useState({});
+    const navigate = useNavigate();
 
-    // useEffect(() => {
 
-    //     const ProjectUser = async () => {
-    //         const token = localStorage.getItem('token');
+    const handleNotify = notify => {
+        SetNotify(notify)
 
-    //         if(!token) {
-    //             setloading(false)
-    //             return 
-    //         }
+        setTimeout(() => {
+            SetNotify({})
+        }, 3000);
+    }
 
-    //         const config = {
-    //             headers: {
-    //                 "Content-Type": "application/json",
-    //                 Projectorization: `Bearer ${token}`
-    //             }
-    //         }
 
-    //         try {
-    //           const response = await axiosClient('/users/profile', config);
+    const submitProject = async project => {
+
+        try {
+
+            const token = localStorage.getItem('token');
+
+            if(!token) return 
+
+            const config = {
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`
+                }
+            }
+
+       
+              const response = await axiosClient.post('/projects', project, config);
                 
-    //           console.log('data--------------', response)
-    //           setProject(response.data)
-    //           navigate('/projects')
+              handleNotify({
+                message: 'Project has been created, Yupi....!',
+                error: false,
+            })
 
-    //         } catch (error) {
-    //            setProject({})
-    //         } finally {
-    //             setloading(false)
-    //         }
+            setTimeout(() => {
+                SetNotify({})
+                useNavigate('/projects')
+            }, 3000);
 
             
-    //     }
-
-    //     ProjectUser();
-
-        
-
-
-    // }, [])
+      
     
+            
+        } catch (error) {
+            console.log(error)
+        }
+
+    }
 
     return (
         <ProjectContext.Provider
             value={{
-                projects
+                projects,
+                setProjects,
+                submitProject,
+                Notify,
+                handleNotify
             }}
         >
 
