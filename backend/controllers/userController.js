@@ -202,6 +202,7 @@ const createNewPassword = async (req, res) => {
 
 const profile = (req, res) => {
     const {user} = req;
+    
     res.json(user);
 }
 

@@ -27,10 +27,7 @@ const getProject = async (req, res ) => {
     //get project's tasks
     const tasks = await Task.find().where('project').equals(project._id);
 
-    res.json({
-        project,
-        tasks,
-    })
+    res.json(project)
 
 
     
