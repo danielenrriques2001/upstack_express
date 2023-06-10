@@ -1,4 +1,4 @@
-import React, { useState} from 'react'
+import React, { useState, useEffect} from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import Alert from '../components/Alert'
 import axiosClient from '../config/AxiosConfig'
@@ -11,6 +11,8 @@ const Login = () => {
   const [Notify, setNotify] = useState('')
 
   const {setAuth} = useAuth();
+
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -33,17 +35,10 @@ const Login = () => {
        email, password
       });
 
-
+     localStorage.setItem('token', response.data?.token)
      setAuth(response.data)
 
   
-
-      localStorage.setItem('token', response.data?.token)
-
-      setNotify({
-        message: 'You have successfully been logged',
-        error: false
-      })
       
     } catch (error) {
 
