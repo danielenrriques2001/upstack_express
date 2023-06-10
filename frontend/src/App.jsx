@@ -12,6 +12,7 @@ import ProtectedRoute from '../src/layouts/ProtectedRoute'
 import Projects from './pages/Projects'
 import NewProject from './pages/NewProject'
 import {ProjectProvider} from '../src/context/ProjectProvider' 
+import Project from './pages/Project'
 function App() {
   const [count, setCount] = useState(0)
 
@@ -40,6 +41,7 @@ function App() {
        <Route path='/projects' element={<ProtectedRoute/>}>
           <Route index element={<Projects/>}/>
           <Route path='create-project' element={<NewProject/>}/>
+          <Route path=':id' element={<Project/>}/>
        </Route>
 
 

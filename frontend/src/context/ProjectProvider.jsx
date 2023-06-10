@@ -9,6 +9,8 @@ const ProjectProvider = ({children}) => {
 
     
     const [projects, setProjects] = useState([]);
+    const [project, setProject] = useState({});
+    const [loading, setLoading] = useState(true);
     const [Notify, SetNotify] = useState({});
     const navigate = useNavigate();
 
@@ -20,6 +22,37 @@ const ProjectProvider = ({children}) => {
             SetNotify({})
         }, 3000);
     }
+
+    useEffect(() => {
+
+        const getProjects = async () => {
+            const token = localStorage.getItem('token');
+
+            if(!token) return 
+
+            const config = {
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`
+                }
+            }
+
+            try {
+              const response = await axiosClient('/projects', config);
+              setProjects(response.data)
+        
+            } catch (error) {
+              console.log(error)
+            } 
+            
+        }
+
+        getProjects();
+
+        
+
+
+    }, [])
 
 
     const submitProject = async project => {
@@ -45,10 +78,12 @@ const ProjectProvider = ({children}) => {
                 error: false,
             })
 
+            setProjects([...projects, project])
+
             setTimeout(() => {
                 SetNotify({})
-                useNavigate('/projects')
-            }, 3000);
+                navigate('/projects')
+            }, 1000);
 
             
       
@@ -60,6 +95,35 @@ const ProjectProvider = ({children}) => {
 
     }
 
+    const getProject = async id => {
+
+        setLoading(true)
+        const token = localStorage.getItem('token');
+       
+
+        if(!token) return 
+
+        const config = {
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`
+            }
+        }
+
+        try {
+          const response = await axiosClient(`/projects/${id}`, config);
+
+         setProject(response.data)
+    
+        } catch (error) {
+          console.log(error)
+        } finally {
+            setLoading(false)
+        }
+        
+    }
+
+
     return (
         <ProjectContext.Provider
             value={{
@@ -67,7 +131,11 @@ const ProjectProvider = ({children}) => {
                 setProjects,
                 submitProject,
                 Notify,
-                handleNotify
+                handleNotify,
+                getProject, 
+                project,
+                loading,
+                 setLoading
             }}
         >
 
