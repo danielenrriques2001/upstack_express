@@ -13,8 +13,8 @@ const Projects = () => {
           {projects.length ? 
               projects.map(project => (
                   <PreviewProject 
-                      key={project._id}
-                      project={project}
+                        key={project._id}
+                        project={project}
                   />
               ))
           

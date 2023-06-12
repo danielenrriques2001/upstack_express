@@ -54,13 +54,15 @@ const ProjectProvider = ({children}) => {
 
     }, [])
 
+    
+
 
     const submitProject = async project => {
+
 
         try {
 
             const token = localStorage.getItem('token');
-
             if(!token) return 
 
             const config = {
@@ -70,30 +72,60 @@ const ProjectProvider = ({children}) => {
                 }
             }
 
-       
-              const response = await axiosClient.post('/projects', project, config);
+            if(!project.id) {
+              const data = await newProject(project, config);
+
+              console.log('new project -----------', data)
+ 
+            } else {
+                const data = await editProject(project, config);
+              
                 
-              handleNotify({
+            }
+  
+        } catch (error) {
+            console.log(error)
+        }
+
+    }
+
+    const editProject = async (project, config) => {
+
+
+            const response = await axiosClient.put(`/projects/${project.id}`, project, config);
+
+            handleNotify({
+                message: 'Project has been edited, Yupi....!',
+                error: false,
+            })
+
+          
+            const updatedProjects = projects.map(item => item._id === response?.data._id ? response?.data : item);
+
+            setProjects(updatedProjects);
+
+            return response?.data;
+
+    }
+    const newProject = async (project, config) => {
+
+      
+            const response = await axiosClient.post('/projects', project, config);
+
+            handleNotify({
                 message: 'Project has been created, Yupi....!',
                 error: false,
             })
 
             setProjects([...projects, project])
 
-            setTimeout(() => {
-                SetNotify({})
-                navigate('/projects')
-            }, 1000);
 
-            
-      
-    
-            
-        } catch (error) {
-            console.log(error)
-        }
+            return response?.data;
 
+
+        
     }
+    
 
     const getProject = async id => {
 

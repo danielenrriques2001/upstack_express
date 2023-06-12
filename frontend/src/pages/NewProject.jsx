@@ -9,6 +9,7 @@ const NewProject = () => {
   const [description, setDescription] = useState('')
   const [dispatchDate, setDispatchDate] = useState('')
   const [costumer, setCostumer] = useState('')
+  const [id, setId] = useState(null)
 
 
   const {setProjects, projects, submitProject, Notify, handleNotify} = UseProject();
@@ -30,7 +31,9 @@ const NewProject = () => {
       return
     }
 
-    await submitProject({name, description, dispatch_Date: dispatchDate, costumer});
+    const response = await submitProject({id, name, description, dispatch_Date: dispatchDate, costumer});
+
+    console.log('this is the new project submit, response:', response?.data)
 
     setName('')
     setCostumer('')

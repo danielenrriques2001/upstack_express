@@ -13,6 +13,8 @@ import Projects from './pages/Projects'
 import NewProject from './pages/NewProject'
 import {ProjectProvider} from '../src/context/ProjectProvider' 
 import Project from './pages/Project'
+import EditProject from './pages/EditProject'
+
 function App() {
   const [count, setCount] = useState(0)
 
@@ -42,6 +44,7 @@ function App() {
           <Route index element={<Projects/>}/>
           <Route path='create-project' element={<NewProject/>}/>
           <Route path=':id' element={<Project/>}/>
+          <Route path='edit/:id' element={<EditProject/>}/>
        </Route>
 
 
