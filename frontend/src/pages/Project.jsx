@@ -7,9 +7,10 @@ import Modal from '../components/Modal'
 import FormTask from '../components/FormTask'
 import ModalDelete from "../components/ModalDelete";
 import Task from "../components/Task";
+import Alert from "../components/Alert";
 const Project = () => {
 
-  const {getProject, project, loading, setLoading, modal, handleCloseModal, handleOpenModal, handleDeleteTask, modalDelete} = UseProject();
+  const {getProject, project, loading, setLoading, modal, handleCloseModal, handleOpenModal, handleDeleteTask, modalDelete, Notify} = UseProject();
   const params = useParams(); 
 
 
@@ -18,6 +19,8 @@ const Project = () => {
       setLoading(true)
       getProject(params.id)
   }, [])
+
+  const {message} = Notify;
   
 
 
@@ -87,6 +90,10 @@ const Project = () => {
       Task's List
     </p>
     <div className="bg-white shadow mt-10 rounded-lg">
+
+      {
+        message && <Alert alert={Notify}/>
+      }
 
       {
         project?.tasks?.length ? 

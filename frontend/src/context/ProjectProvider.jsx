@@ -330,11 +330,10 @@ const ProjectProvider = ({children}) => {
            
 
 
-            SetNotify({});
+          
             handleCloseModalTask();
             setTask({});
 
-            console.log('this is the project -----', project)
 
             const updatedProject = {...project} 
 
