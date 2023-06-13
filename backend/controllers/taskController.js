@@ -20,9 +20,6 @@ const createTask = async (req, res ) => {
 
     const {project} = req.body;
 
-    
-
-    
     const projectExists = await Project.findById(project);
 
  
@@ -37,7 +34,13 @@ const createTask = async (req, res ) => {
 
     try {
         const storedTask = await Task.create(req.body);
-        return res.status(200).json({message: 'Task has been save successfully'})
+
+        projectExists.tasks.push(storedTask._id)
+        await projectExists.save();
+
+
+
+        return res.status(200).json({message: 'Task has been save successfully', data: storedTask})
     } catch (error) {
         console.log(error)
     }
@@ -64,7 +67,8 @@ const editTask = async (req, res ) => {
 
    try {
         const storedTask = await task.save();
-        res.json(storedProject);
+        
+        return res.status(200).json({message: 'Task has been edited successfully', data: storedTask})
 
    } catch (error) {
         console.log(error)
