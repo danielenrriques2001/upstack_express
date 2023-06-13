@@ -79,7 +79,12 @@ const deleteTask = async (req, res ) => {
 
     const {id} = req.params;
     
-    const task = await Task.findById(id);
+    const task = await Task.findById(id).populate('project');
+
+    console.log(req.user._id)
+    console.log(task.project.owner)
+
+
 
     if(!task) {
         return res.status(404).json({message: 'Not found'})
@@ -88,7 +93,7 @@ const deleteTask = async (req, res ) => {
     if(task.project.owner.toString() !== req.user._id.toString() ) {
         const error = new Error('You dont have the rights ')
 
-        return res.status(404).json({message: error.message })
+        return res.status(403).json({message: error.message })
 
     }
 
