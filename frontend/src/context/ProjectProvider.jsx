@@ -20,7 +20,7 @@ const ProjectProvider = ({children}) => {
 
     const [task, setTask] = useState({});
 
-    const [isEditing, setIsEditing] = useState(false)
+    const [modalDelete, setModalDelete] = useState(false);
 
 
     const navigate = useNavigate();
@@ -295,6 +295,58 @@ const ProjectProvider = ({children}) => {
 
     }
 
+    const handleDeleteTask = (task) => {
+        setModalDelete(true)
+        setTask(task)
+    }
+
+    const handleCloseModalTask = () => {
+        setModalDelete(false)
+    }
+
+
+    const deleteTask = async () => {
+        const token = localStorage.getItem('token');
+
+        if(!token) return 
+
+        const config = {
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`
+            }
+        }
+
+        try {
+            const response = await axiosClient.delete(`/tasks/${task._id}`,config);
+
+            console.log(response)
+
+            handleNotify({
+                message: response?.data?.message,
+                error: false,
+            })
+
+           
+
+
+            SetNotify({});
+            handleCloseModalTask();
+            setTask({});
+
+            console.log('this is the project -----', project)
+
+            const updatedProject = {...project} 
+
+            updatedProject.tasks = updatedProject.tasks.filter(taskState => taskState._id !== task._id);
+
+            setProject(updatedProject);
+
+    
+        } catch (error) {
+          console.log(error)
+        } 
+    }
 
     return (
         <ProjectContext.Provider
@@ -314,7 +366,11 @@ const ProjectProvider = ({children}) => {
                 handleCloseModal,
                 createTask,
                 editTask,
-                task
+                task,
+                modalDelete,
+                handleDeleteTask,
+                handleCloseModalTask,
+                deleteTask
             }}
         >
 

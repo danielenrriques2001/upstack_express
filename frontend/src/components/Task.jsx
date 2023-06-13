@@ -3,7 +3,7 @@ import UseProject from '../hooks/UseProject'
 const Task = ({task}) => {
 
     const {description, name, priority, dispatch_Date, _id, status} = task;
-    const {setModal, editTask} = UseProject();
+    const {setModal, editTask, handleDeleteTask, modalDelete} = UseProject();
     
 
 
@@ -42,6 +42,7 @@ const Task = ({task}) => {
 
             <button
             className="text-sm px-10 py-3 w-full md:w-auto rounded-lg uppercase font-bold bg-gray-700 text-white text-center mt-5 flex gap-2 justify-center items-center "
+          
             >
                     Incomplete
         
@@ -54,12 +55,13 @@ const Task = ({task}) => {
 
    
 
-    <button
-    className="text-sm px-10 py-3 w-full md:w-auto rounded-lg uppercase font-bold bg-red-700 text-white text-center mt-5 flex gap-2 justify-center items-center "
-    >
-            Delete
+                <button
+                className="text-sm px-10 py-3 w-full md:w-auto rounded-lg uppercase font-bold bg-red-700 text-white text-center mt-5 flex gap-2 justify-center items-center "
+                onClick={() => {handleDeleteTask(task)}}
+                >
+                        Delete
 
-    </button>
+                </button>
 
 
 

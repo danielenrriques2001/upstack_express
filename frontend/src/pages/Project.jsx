@@ -5,10 +5,11 @@ import { Link, useParams } from "react-router-dom"
 import UseProject from "../hooks/UseProject"
 import Modal from '../components/Modal'
 import FormTask from '../components/FormTask'
+import ModalDelete from "../components/ModalDelete";
 import Task from "../components/Task";
 const Project = () => {
 
-  const {getProject, project, loading, setLoading, modal, handleCloseModal, handleOpenModal} = UseProject();
+  const {getProject, project, loading, setLoading, modal, handleCloseModal, handleOpenModal, handleDeleteTask, modalDelete} = UseProject();
   const params = useParams(); 
 
 
@@ -114,6 +115,8 @@ const Project = () => {
           
           />
     </Modal>
+
+    <ModalDelete/>
 
     </>
   )
