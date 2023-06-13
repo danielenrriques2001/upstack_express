@@ -18,6 +18,10 @@ const ProjectProvider = ({children}) => {
     
     const [modal, setModal] = useState(false);
 
+    const [task, setTask] = useState({});
+
+    const [isEditing, setIsEditing] = useState(false)
+
 
     const navigate = useNavigate();
 
@@ -212,9 +216,10 @@ const ProjectProvider = ({children}) => {
 
     const createTask = async task => {
 
+    
+
         try {
 
-            console.log('this is provider task', task)
             const token = localStorage.getItem('token');
             if(!token) return 
 
@@ -224,6 +229,8 @@ const ProjectProvider = ({children}) => {
                     Authorization: `Bearer ${token}`
                 }
             }
+
+            if(!task.id) {
                 const { data } = await axiosClient.post('/tasks', task, config);
 
                 handleNotify({
@@ -231,25 +238,60 @@ const ProjectProvider = ({children}) => {
                     error: false,
                 })
 
+                const updatedProject = {...project};
+                updatedProject.tasks = [data.data, ...project.tasks, ];
 
-            
- 
-            // } else {
-            //     const data = await editProject(project, config);
-              
+                setProject(updatedProject)
+                SetNotify({})
+                setModal(false)
+
                 
-            // }
-            setTimeout(() => {
-                navigate(`/projects`)    
-              }, 1000);
+            } else {
+                const { data } = await axiosClient.put(`/tasks/${task.id}`, task, config);
+
+                const updatedProject = {...project};
+                updatedProject.tasks = [data.data, ...project.tasks, ];
+
+                setProject(updatedProject)
+                SetNotify({})
+                setModal(false)
+            }   
           
-  
+        
+                const updatedProject = {...project};
+                updatedProject.tasks = [data.data, ...project.tasks, ];
+
+                setProject(updatedProject)
+                SetNotify({})
+                setModal(false)
+
         } catch (error) {
             console.log(error)
         }
 
      
 
+
+    }
+    const editTask = async task => {
+
+        setTask(task)
+        setModal(true)
+        setIsEditing(true)
+
+    }
+
+    const handleCloseModal = () => {
+
+        setModal(false);
+        setTask({});
+
+    }
+
+    const handleOpenModal = () => {
+
+        setModal(true);
+       
 
     }
 
@@ -268,8 +310,11 @@ const ProjectProvider = ({children}) => {
                  setLoading,
                  deleteProject,
                 modal, 
-                setModal,
-                createTask
+                handleOpenModal,
+                handleCloseModal,
+                createTask,
+                editTask,
+                task
             }}
         >
 

@@ -2,11 +2,11 @@ import { Fragment, useState, useEffect } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
 
 
-const Modal = ({modal, setModal, children}) => {
+const Modal = ({modal, handleCloseModal, children}) => {
  
     return (
         <Transition.Root show={modal} as={Fragment}>
-            <Dialog as="div" className="fixed z-10 inset-0 overflow-y-auto" onClose={() => {setModal(false)}}>
+            <Dialog as="div" className="fixed z-10 inset-0 overflow-y-auto" onClose={() => {handleCloseModal()}}>
                 <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
                     <Transition.Child
                         as={Fragment}
@@ -43,7 +43,7 @@ const Modal = ({modal, setModal, children}) => {
                                 <button
                                     type="button"
                                     className="bg-white rounded-md text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                                    onClick={() => {setModal(false)}}
+                                    onClick={() => {handleCloseModal()}}
                                 >
                                 <span className="sr-only">Close</span>
                                     <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" viewBox="0 0 20 20" fill="currentColor">

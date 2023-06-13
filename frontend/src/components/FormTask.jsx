@@ -1,5 +1,5 @@
 import { Dialog } from '@headlessui/react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import UseProject from '../hooks/UseProject';
 import Alert from '../components/Alert'
 import { useParams } from 'react-router-dom';
@@ -13,11 +13,27 @@ const FormTask = () => {
     const [description, setDescription] = useState('')
     const [priority, setPriority] = useState('')
     const [dispatch, setDispatch] = useState('')
+    const [id, setId] = useState('')
     
     const params = useParams();
 
-    console.log('there are params', params)
-    const {handleNotify, Notify, createTask} = UseProject();
+    const {handleNotify, Notify, createTask, task, editTask} = UseProject();
+
+    useEffect(() => {
+
+
+
+            setName(task.name)
+            setDescription(task.description)
+            setDispatch(task.dispatch_Date?.split('T')[0])
+            setPriority(task.priority)
+            setId(task._id)
+
+
+
+     
+    }, [])
+    
 
 
 
@@ -34,7 +50,8 @@ const FormTask = () => {
             return
         }
 
-        createTask({name, priority, description,  dispatch_Date: dispatch, project: params.id});
+
+        createTask({id, name, priority, description,  dispatch_Date: dispatch, project: params.id});
 
 
 
@@ -50,7 +67,7 @@ const FormTask = () => {
      <div className="sm:flex sm:items-start">
                                 <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
                                     <Dialog.Title as="h3" className="text-lg leading-6 font-bold text-gray-900">
-                                     Create Task
+                                    { !id ? ' Create Task' : 'Edit Task'}
                                     </Dialog.Title>
 
                                     <form
@@ -170,7 +187,7 @@ const FormTask = () => {
                                         <input
                                             type='submit'
                                             className='bg-sky-600 hover:bg-sky-600 text-white uppercase cursor-pointer font-bold transition-colors rounded text-sm w-full p-5'
-                                            value={' Create Task'}
+                                            value={ !id ? ' Create Task' : 'Edit Task'}
                                         />
 
                                            

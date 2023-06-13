@@ -5,9 +5,10 @@ import { Link, useParams } from "react-router-dom"
 import UseProject from "../hooks/UseProject"
 import Modal from '../components/Modal'
 import FormTask from '../components/FormTask'
+import Task from "../components/Task";
 const Project = () => {
 
-  const {getProject, project, loading, setLoading, modal, setModal} = UseProject();
+  const {getProject, project, loading, setLoading, modal, handleCloseModal, handleOpenModal} = UseProject();
   const params = useParams(); 
 
 
@@ -69,7 +70,7 @@ const Project = () => {
     <button
     type="submit"
     className="text-sm px-10 py-3 w-full md:w-auto rounded-lg uppercase font-bold bg-sky-400 text-white text-center mt-5 flex gap-2 justify-center items-center "
-    onClick={() => {setModal(true)}}
+    onClick={() => {handleOpenModal()}}
     >
 
       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
@@ -79,12 +80,37 @@ const Project = () => {
     New Task
 
     </button>
+
+
+    <p  className="font-bold text-xl mt-10" >
+      Task's List
+    </p>
+    <div className="bg-white shadow mt-10 rounded-lg">
+
+      {
+        project?.tasks?.length ? 
+        
+          project?.tasks?.map( task => (
+            <Task
+              key={task._id}
+              task ={task}
+            />
+          ))
+        
+        : 
+        <p className="text-center my-5 p-10">Not Tasks found!</p>
+      }
+
+
+    </div>
+
+
     <Modal 
           modal = {modal}
-          setModal = {setModal}
+          handleCloseModal = {handleCloseModal}
     >
           <FormTask
-          
+
           
           />
     </Modal>
