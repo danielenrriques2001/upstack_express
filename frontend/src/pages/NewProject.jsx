@@ -33,7 +33,6 @@ const NewProject = () => {
 
     const response = await submitProject({id, name, description, dispatch_Date: dispatchDate, costumer});
 
-    console.log('this is the new project submit, response:', response?.data)
 
     setName('')
     setCostumer('')

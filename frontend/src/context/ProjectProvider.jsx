@@ -9,9 +9,16 @@ const ProjectProvider = ({children}) => {
 
     
     const [projects, setProjects] = useState([]);
+
     const [project, setProject] = useState({});
+
     const [loading, setLoading] = useState(true);
+
     const [Notify, SetNotify] = useState({});
+    
+    const [modal, setModal] = useState(false);
+
+
     const navigate = useNavigate();
 
 
@@ -75,13 +82,17 @@ const ProjectProvider = ({children}) => {
             if(!project.id) {
               const data = await newProject(project, config);
 
-              console.log('new project -----------', data)
+            
  
             } else {
                 const data = await editProject(project, config);
               
                 
             }
+            setTimeout(() => {
+                navigate('/projects')    
+              }, 1000);
+          
   
         } catch (error) {
             console.log(error)
@@ -120,13 +131,14 @@ const ProjectProvider = ({children}) => {
             setProjects([...projects, project])
 
 
+
+
             return response?.data;
 
 
         
     }
     
-
     const getProject = async id => {
 
         setLoading(true)
@@ -155,6 +167,92 @@ const ProjectProvider = ({children}) => {
         
     }
 
+    const deleteProject = async id => {
+
+        const token = localStorage.getItem('token');
+
+        if(!token) return 
+
+        const config = {
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`
+            }
+        }
+
+        try {
+            const response = await axiosClient.delete(`/projects/${id}`,config);
+
+            console.log(response)
+
+            handleNotify({
+                message: response?.data?.message,
+                error: false,
+            })
+
+            setTimeout(() => {
+                SetNotify({})
+                navigate('/projects')
+            }, 3000);
+
+          
+            const updatedProjects = projects.filter(item => item._id !== id);
+
+            setProjects(updatedProjects)
+
+            // setProjects(updatedProjects);
+
+            // return response?.data;
+    
+        } catch (error) {
+          console.log(error)
+        } 
+
+    }
+
+    const createTask = async task => {
+
+        try {
+
+            console.log('this is provider task', task)
+            const token = localStorage.getItem('token');
+            if(!token) return 
+
+            const config = {
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`
+                }
+            }
+                const { data } = await axiosClient.post('/tasks', task, config);
+
+                handleNotify({
+                    message: data.message,
+                    error: false,
+                })
+
+
+            
+ 
+            // } else {
+            //     const data = await editProject(project, config);
+              
+                
+            // }
+            setTimeout(() => {
+                navigate(`/projects`)    
+              }, 1000);
+          
+  
+        } catch (error) {
+            console.log(error)
+        }
+
+     
+
+
+    }
+
 
     return (
         <ProjectContext.Provider
@@ -167,7 +265,11 @@ const ProjectProvider = ({children}) => {
                 getProject, 
                 project,
                 loading,
-                 setLoading
+                 setLoading,
+                 deleteProject,
+                modal, 
+                setModal,
+                createTask
             }}
         >
 
