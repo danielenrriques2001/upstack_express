@@ -1,5 +1,6 @@
 import Project from '../models/Project.js'
 import Task from '../models/Task.js';
+import User from '../models/User.js';
 
 const getProjects = async (req, res ) => {
     const projects = await Project
@@ -14,7 +15,9 @@ const getProjects = async (req, res ) => {
 const getProject = async (req, res ) => {
         const {id} = req.params;
     
-    const project = await Project.findById(id).populate('tasks');
+    const project = await Project.findById(id)
+    .populate('tasks')
+    .populate('collaborators', 'name email ');
 
     if(!project) {
         return res.status(404).json({message: 'Not found'})
@@ -104,8 +107,72 @@ const deleteProject = async (req, res ) => {
         console.log(error)
     }
 }
+const searchCollaborator = async (req, res ) => {
 
-const addCollaborator = (req, res ) => {
+   const {email} = req.body;
+
+   const user = await User.findOne({email}).select('-confirmed -createdAt -password -token -updatedAt -__v');
+
+   if(!user) { 
+    const error = new Error('User not found')
+    
+    return res.status(404).json({message: error.message });
+
+    }
+
+
+
+
+   return res.json({user})
+
+    
+}
+const addCollaborator = async (req, res ) => {
+
+   const {id} = req.params;
+   const {email} = req.body;
+
+
+   const project = await Project.findById(id);
+   
+
+
+   if(!project) {
+    const error = new Error('Project not found.')
+    return res.status(404).json({message: error.message})
+   }
+
+   if(project.owner.toString() !== req.user._id.toString() ) {
+            const error = new Error('You dont have the rights')
+           return res.status(404).json({message: error.message })
+    }
+
+    const user = await User.findOne({email}).select('-confirmed -createdAt -password -token -updatedAt -__v');
+
+   if(!user) { 
+    const error = new Error('User not found')
+    
+    return res.status(404).json({message: error.message });
+
+    }
+
+
+    if(project.owner.toString() === user._id.toString() ) {
+        const error = new Error('The Admin cant be collaborator')
+       return res.status(404).json({message: error.message })
+}
+
+
+    if(project.collaborators.includes(user._id)) {
+        const error = new Error('The User is already a Collaborator')
+        return res.status(404).json({message: error.message })
+    }
+
+    project.collaborators.push(req.user._id);
+    await project.save();
+
+    return res.json({message: 'Collaborator has been added'})
+
     
 }
 const deleteCollaborator = (req, res ) => {
@@ -121,5 +188,6 @@ export {
     addCollaborator,
     deleteProject,
     deleteCollaborator,
+    searchCollaborator
 
 }
