@@ -21,6 +21,8 @@ const ProjectProvider = ({children}) => {
     const [task, setTask] = useState({});
 
     const [modalDelete, setModalDelete] = useState(false);
+    
+    const [collaborator, setCollaborator] = useState({})
 
 
     const navigate = useNavigate();
@@ -347,6 +349,83 @@ const ProjectProvider = ({children}) => {
         } 
     }
 
+    const handleSubmitCollaborator = async email => {
+
+        setLoading(true)
+
+        const token = localStorage.getItem('token');
+
+        if(!token) return 
+
+        const config = {
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`
+            }
+        }
+
+        try {
+            const {data} = await axiosClient.post('/projects/collaborators', {email}, config)
+           setCollaborator(data)
+           SetNotify({})
+        } catch (error) {
+
+
+            handleNotify({
+                message: error.response.data.message,
+                error: true, 
+            })
+        } finally {
+            setLoading(false)
+        }
+
+
+        
+
+    }
+
+    const handleAddCollaborator = async email => {
+
+        const token = localStorage.getItem('token');
+
+        if(!token) return 
+
+        const config = {
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`
+            }
+        }
+
+        try {
+            const {data} = await axiosClient.post(`/projects/collaborators/${project._id}`, {email}, config)
+
+            
+
+           
+
+            handleNotify({
+                message: data?.message,
+                error: false,
+            })
+
+         
+
+           
+    
+        } catch (error) {
+            handleNotify({
+                message: error?.response?.data?.message,
+                error: true,
+            })
+        } finally {
+            setCollaborator({})
+        }
+
+
+
+    }
+
     return (
         <ProjectContext.Provider
             value={{
@@ -369,7 +448,10 @@ const ProjectProvider = ({children}) => {
                 modalDelete,
                 handleDeleteTask,
                 handleCloseModalTask,
-                deleteTask
+                deleteTask,
+                handleSubmitCollaborator,
+                collaborator,
+                handleAddCollaborator
             }}
         >
 

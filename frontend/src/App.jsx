@@ -14,6 +14,7 @@ import NewProject from './pages/NewProject'
 import {ProjectProvider} from '../src/context/ProjectProvider' 
 import Project from './pages/Project'
 import EditProject from './pages/EditProject'
+import NewCollaborator from './pages/NewCollaborator'
 
 function App() {
   const [count, setCount] = useState(0)
@@ -45,6 +46,7 @@ function App() {
           <Route path='create-project' element={<NewProject/>}/>
           <Route path=':id' element={<Project/>}/>
           <Route path='edit/:id' element={<EditProject/>}/>
+          <Route path='new-collaborator/:id' element={<NewCollaborator/>}/>
        </Route>
 
 

@@ -8,6 +8,8 @@ import FormTask from '../components/FormTask'
 import ModalDelete from "../components/ModalDelete";
 import Task from "../components/Task";
 import Alert from "../components/Alert";
+import Collaborator from "../components/Collaborator";
+
 const Project = () => {
 
   const {getProject, project, loading, setLoading, modal, handleCloseModal, handleOpenModal, handleDeleteTask, modalDelete, Notify} = UseProject();
@@ -62,8 +64,7 @@ const Project = () => {
           Edit 
         </Link>
 
-        
-
+    
 
         </div>
 
@@ -111,6 +112,50 @@ const Project = () => {
 
 
     </div>
+
+    <div className="flex justify-between items-center">
+
+    <p  className="font-bold text-xl mt-10 " >
+      Collaborators
+    </p>
+
+    
+
+    <div className="flex gap-1">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M19 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zM4 19.235v-.11a6.375 6.375 0 0112.75 0v.109A12.318 12.318 0 0110.374 21c-2.331 0-4.512-.645-6.374-1.766z" />
+    </svg>
+
+
+        <Link
+          to={`/projects/new-collaborator/${project._id}`}
+
+        >
+         Add New
+        </Link>
+
+    
+
+        </div>
+
+
+
+    </div>
+
+    {
+        project?.collaborators?.length ? 
+        
+          project?.collaborators?.map( co => (
+            <Collaborator
+              key={co._id}
+              collaborator ={co}
+            />
+          ))
+        
+        : 
+        <p className="text-center my-5 p-10">Not Collaborator found!</p>
+      }
+
 
 
     <Modal 
