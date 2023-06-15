@@ -5,6 +5,7 @@ const Collaborator = ({collaborator}) => {
     const {name, email} = collaborator;
 
     console.log('this is the collab', collaborator)
+    
     const {handleDeleteCollaborator} = UseProject();
 
   return (

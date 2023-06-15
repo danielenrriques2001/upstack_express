@@ -388,6 +388,8 @@ const ProjectProvider = ({children}) => {
 
     const handleAddCollaborator = async email => {
 
+        
+
         const token = localStorage.getItem('token');
 
         if(!token) return 
@@ -401,10 +403,6 @@ const ProjectProvider = ({children}) => {
 
         try {
             const {data} = await axiosClient.post(`/projects/collaborators/${project._id}`, {email}, config)
-
-            
-
-           
 
             handleNotify({
                 message: data?.message,
@@ -454,7 +452,9 @@ const ProjectProvider = ({children}) => {
         }
 
         try {
-            const {data} = await axiosClient.post(`/delete-collaborators/${project._id}`, {id: collaborator._id} ,config);
+
+            
+            const {data} = await axiosClient.post(`projects/delete-collaborators/${project._id}`, {id: collaborator._id} , config);
 
 
             handleNotify({
@@ -462,8 +462,7 @@ const ProjectProvider = ({children}) => {
                 error: false,
             })
             
-            handleDeleteCollaborator();            
-            setCollaborator({});
+          
 
 
             const updatedProject = {...project} ;
@@ -472,6 +471,9 @@ const ProjectProvider = ({children}) => {
             updatedProject.collaborators = updatedProject.collaborators.filter(collaboratorState => collaboratorState._id !== collaborator._id);
 
             setProject(updatedProject);
+
+            handleDeleteCollaborator();            
+            setCollaborator({});
 
     
         } catch (error) {
