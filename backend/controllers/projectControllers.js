@@ -26,7 +26,10 @@ const getProject = async (req, res ) => {
         return res.status(404).json({message: 'Not found'})
     }
 
-    if(project.owner.toString() !== req.user._id.toString() ) {
+    if(project.owner.toString() !== req.user._id.toString() && 
+    !project.collaborators.some( 
+    (collaborator) => collaborator._id.toString() === req.user._id.toString()
+    )) {
         const error = new Error('You dont have the rights ')
         return res.status(404).json({message: error.message })
     }
