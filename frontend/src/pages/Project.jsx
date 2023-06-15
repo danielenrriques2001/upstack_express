@@ -9,6 +9,7 @@ import ModalDelete from "../components/ModalDelete";
 import Task from "../components/Task";
 import Alert from "../components/Alert";
 import Collaborator from "../components/Collaborator";
+import ModalDeleteCollaborator from "../components/ModalDeleteCollaborator";
 
 const Project = () => {
 
@@ -169,6 +170,8 @@ const Project = () => {
     </Modal>
 
     <ModalDelete/>
+
+    <ModalDeleteCollaborator/>
 
     </>
   )

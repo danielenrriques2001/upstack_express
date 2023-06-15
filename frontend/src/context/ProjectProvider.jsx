@@ -21,8 +21,10 @@ const ProjectProvider = ({children}) => {
     const [task, setTask] = useState({});
 
     const [modalDelete, setModalDelete] = useState(false);
+    const [modalDeleteCollaborator, setModalDeleteCollaborator] = useState(false);
     
-    const [collaborator, setCollaborator] = useState({})
+    const [collaborator, setCollaborator] = useState({});
+
 
 
     const navigate = useNavigate();
@@ -426,6 +428,63 @@ const ProjectProvider = ({children}) => {
 
     }
 
+    const handleDeleteCollaborator = async (collaborator) => {
+
+
+        setModalDeleteCollaborator(!modalDeleteCollaborator);
+
+        setCollaborator(collaborator);
+
+
+
+
+    }
+
+    const deleteCollaborator = async () => {
+
+        const token = localStorage.getItem('token');
+
+        if(!token) return 
+
+        const config = {
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`
+            }
+        }
+
+        try {
+            const {data} = await axiosClient.post(`/delete-collaborators/${project._id}`, {id: collaborator._id} ,config);
+
+
+            handleNotify({
+                message: data?.message,
+                error: false,
+            })
+            
+            handleDeleteCollaborator();            
+            setCollaborator({});
+
+
+            const updatedProject = {...project} ;
+
+
+            updatedProject.collaborators = updatedProject.collaborators.filter(collaboratorState => collaboratorState._id !== collaborator._id);
+
+            setProject(updatedProject);
+
+    
+        } catch (error) {
+          console.log(error)
+        } 
+
+
+
+
+        
+       
+    }
+
     return (
         <ProjectContext.Provider
             value={{
@@ -451,7 +510,10 @@ const ProjectProvider = ({children}) => {
                 deleteTask,
                 handleSubmitCollaborator,
                 collaborator,
-                handleAddCollaborator
+                handleAddCollaborator,
+                handleDeleteCollaborator,
+                modalDeleteCollaborator,
+                deleteCollaborator
             }}
         >
 

@@ -1,7 +1,11 @@
 import React from 'react'
+import UseProject from '../hooks/UseProject';
 
 const Collaborator = ({collaborator}) => {
     const {name, email} = collaborator;
+
+    console.log('this is the collab', collaborator)
+    const {handleDeleteCollaborator} = UseProject();
 
   return (
     <div className=' bg-white border  shadow-sm p-5 rounded-xl mt-2 flex justify-between'>
@@ -21,7 +25,7 @@ const Collaborator = ({collaborator}) => {
 
         <button
                 className="text-sm px-10 py-3 w-full md:w-auto rounded-lg uppercase font-bold bg-red-700 text-white text-center mt-5 flex gap-2 justify-center items-center "
-                // onClick={() => {handleDeleteTask(task)}}
+                onClick={() => {handleDeleteCollaborator(collaborator)}}
                 >
                         Delete
 
