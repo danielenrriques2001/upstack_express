@@ -151,9 +151,7 @@ const addCollaborator = async (req, res ) => {
 
    if(!user) { 
     const error = new Error('User not found')
-    
     return res.status(404).json({message: error.message });
-
     }
 
 
@@ -175,7 +173,31 @@ const addCollaborator = async (req, res ) => {
 
     
 }
-const deleteCollaborator = (req, res ) => {
+const deleteCollaborator = async (req, res ) => {
+
+    const {id} = req.params;
+ 
+ 
+    const project = await Project.findById(id);
+    
+ 
+ 
+    if(!project) {
+     const error = new Error('Project not found.')
+     return res.status(404).json({message: error.message})
+    }
+ 
+    if(project.owner.toString() !== req.user._id.toString() ) {
+             const error = new Error('You dont have the rights')
+            return res.status(404).json({message: error.message })
+     }
+
+
+ 
+     project.collaborators.pull(req.body.id);
+     await project.save();
+
+     return res.json({message: 'Collaborator has been deleted'})
     
 }
 
