@@ -1,7 +1,5 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom"
-
-
 import UseProject from "../hooks/UseProject"
 import Modal from '../components/Modal'
 import FormTask from '../components/FormTask'
@@ -10,11 +8,27 @@ import Task from "../components/Task";
 import Alert from "../components/Alert";
 import Collaborator from "../components/Collaborator";
 import ModalDeleteCollaborator from "../components/ModalDeleteCollaborator";
+import UseAdmin from "../hooks/UseAdmin";
+import UseAuth from "../hooks/UseAuth";
 
 const Project = () => {
 
-  const {getProject, project, loading, setLoading, modal, handleCloseModal, handleOpenModal, handleDeleteTask, modalDelete, Notify} = UseProject();
+  const {
+    getProject, 
+    project, 
+    loading, 
+    setLoading, 
+    modal, 
+    handleCloseModal, 
+    handleOpenModal, 
+    handleDeleteTask, 
+    modalDelete, 
+    Notify
+    } = UseProject();
+
   const params = useParams(); 
+  const admin = UseAdmin();
+   
 
 
 
@@ -46,6 +60,7 @@ const Project = () => {
   )
 
   return (
+    message & Notify?.error ? <Alert alert={Notify}/> : (
 
     <>
     <div className="flex justify-between">
@@ -53,27 +68,29 @@ const Project = () => {
        
         {/* <p className="text-2xl font-thin text-gray-500 ">{project?.costumer}</p> */}
 
-        <div className="flex">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="w-6 h-6">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
-        </svg>
-
-        <Link
-          to={`/projects/edit/${params?.id}`}
-
-        >
-          Edit 
-        </Link>
-
-    
-
-        </div>
+        {
+          admin && <div className="flex">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="w-6 h-6">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
+          </svg>
+  
+          <Link
+            to={`/projects/edit/${params?.id}`}
+  
+          >
+            Edit 
+          </Link>
+  
+      
+  
+          </div>
+        }
 
         
 
     </div>
 
-    <button
+    {admin && <button
     type="submit"
     className="text-sm px-10 py-3 w-full md:w-auto rounded-lg uppercase font-bold bg-sky-400 text-white text-center mt-5 flex gap-2 justify-center items-center "
     onClick={() => {handleOpenModal()}}
@@ -85,7 +102,7 @@ const Project = () => {
 
     New Task
 
-    </button>
+    </button>}
 
 
     <p  className="font-bold text-xl mt-10" >
@@ -114,6 +131,7 @@ const Project = () => {
 
     </div>
 
+   { admin && <>
     <div className="flex justify-between items-center">
 
     <p  className="font-bold text-xl mt-10 " >
@@ -144,7 +162,7 @@ const Project = () => {
     </div>
 
     {
-        project?.collaborators?.length ? 
+       admin && project?.collaborators?.length ? 
         
           project?.collaborators?.map( co => (
             <Collaborator
@@ -157,8 +175,9 @@ const Project = () => {
         <p className="text-center my-5 p-10">Not Collaborator found!</p>
       }
 
+</>
 
-
+}
     <Modal 
           modal = {modal}
           handleCloseModal = {handleCloseModal}
@@ -173,7 +192,7 @@ const Project = () => {
 
     <ModalDeleteCollaborator/>
 
-    </>
+    </>)
   )
 }
 

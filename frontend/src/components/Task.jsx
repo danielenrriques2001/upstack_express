@@ -1,9 +1,11 @@
 import { getDateFormat } from "../helpers/getDateFormat";
 import UseProject from '../hooks/UseProject'
+import UseAdmin from "../hooks/UseAdmin";
 const Task = ({task}) => {
 
     const {description, name, priority, dispatch_Date, _id, status} = task;
     const {setModal, editTask, handleDeleteTask, modalDelete} = UseProject();
+    const admin = UseAdmin();
     
 
 
@@ -19,13 +21,13 @@ const Task = ({task}) => {
 
         <div className="flex gap-1">
 
-        <button
+        {admin && <button
             className="text-sm px-10 py-3 w-full md:w-auto rounded-lg uppercase font-bold bg-blue-700 text-white text-center mt-5 flex gap-2 justify-center items-center "
             onClick={() => {editTask(task)}}
-    >
+        >
             Edit
 
-    </button>
+        </button>}
 
     {
         status ? (
@@ -55,14 +57,14 @@ const Task = ({task}) => {
 
    
 
-                <button
+               { admin && <button
                 className="text-sm px-10 py-3 w-full md:w-auto rounded-lg uppercase font-bold bg-red-700 text-white text-center mt-5 flex gap-2 justify-center items-center "
                 onClick={() => {handleDeleteTask(task)}}
                 >
                         Delete
 
                 </button>
-
+                }
 
 
 

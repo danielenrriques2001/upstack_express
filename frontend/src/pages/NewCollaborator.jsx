@@ -8,7 +8,7 @@ import Alert from "../components/Alert";
 const NewCollaborator = () => {
 
   const {getProject, project, collaborator, loading, handleAddCollaborator, Notify} = UseProject();
-  console.log(collaborator)
+
   const params = useParams();
   
 
