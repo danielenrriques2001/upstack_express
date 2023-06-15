@@ -4,9 +4,12 @@ import User from '../models/User.js';
 
 const getProjects = async (req, res ) => {
     const projects = await Project
-        .find()
-        .where('owner')
-        .equals(req.user)
+        .find({
+            '$or' : [
+                {'collaborators': {$in: req.user}},
+                {'owner': {$in: req.user}},
+            ],
+        })
         .select('-tasks')
 
     res.json(projects);
@@ -133,7 +136,9 @@ const addCollaborator = async (req, res ) => {
    const {email} = req.body;
 
 
+
    const project = await Project.findById(id);
+
    
 
 
@@ -148,6 +153,8 @@ const addCollaborator = async (req, res ) => {
     }
 
     const user = await User.findOne({email}).select('-confirmed -createdAt -password -token -updatedAt -__v');
+
+
 
    if(!user) { 
     const error = new Error('User not found')
@@ -166,7 +173,7 @@ const addCollaborator = async (req, res ) => {
         return res.status(404).json({message: error.message })
     }
 
-    project.collaborators.push(req.user._id);
+    project.collaborators.push(user._id);
     await project.save();
 
     return res.json({message: 'Collaborator has been added'})
@@ -176,7 +183,6 @@ const addCollaborator = async (req, res ) => {
 const deleteCollaborator = async (req, res ) => {
 
     const {id} = req.params;
- 
  
     const project = await Project.findById(id);
     
