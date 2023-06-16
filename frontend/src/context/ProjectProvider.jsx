@@ -487,6 +487,46 @@ const ProjectProvider = ({children}) => {
        
     }
 
+    
+    const completeTask = async (id) => {
+
+        const token = localStorage.getItem('token');
+
+        if(!token) return 
+
+        const config = {
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`
+            }
+        }
+
+        try {
+            const {data} = await axiosClient.post(`/tasks/status/${id}`, {}, config)
+
+            
+
+
+
+            handleNotify({
+                message: data?.message,
+                error: false,
+            })
+
+            const updatedProject = {...project} 
+
+            updatedProject.tasks = updatedProject.tasks.map(taskState => taskState._id === data._id ? data : taskState);
+
+            setProject(updatedProject);
+            setTask({})
+            SetNotify({})
+
+            
+        } catch (error) {
+            
+        }
+
+    }
     return (
         <ProjectContext.Provider
             value={{
@@ -515,7 +555,8 @@ const ProjectProvider = ({children}) => {
                 handleAddCollaborator,
                 handleDeleteCollaborator,
                 modalDeleteCollaborator,
-                deleteCollaborator
+                deleteCollaborator,
+                completeTask
             }}
         >
 

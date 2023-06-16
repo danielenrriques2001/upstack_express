@@ -5,7 +5,8 @@ import PreviewProject from '../components/PreviewProject';
 const Projects = () => {
 
   const {projects} = UseProject();
-  console.log(projects)
+
+  
   return (
   <Fragment>
       <h1 className='text-4xl text-gray-800 font-black  p-5'>Projects</h1>

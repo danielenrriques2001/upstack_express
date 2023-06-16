@@ -32,14 +32,17 @@ const AuthProvider = ({children}) => {
             try {
               const response = await axiosClient('/users/profile', config);
                 
-              console.log('data--------------', response)
-              setAuth(response.data)
-              navigate('/projects')
+              setAuth(response.data);
+
+              navigate('/projects');
+
+             
 
             } catch (error) {
                setAuth({})
             } finally {
                 setloading(false)
+              
             }
 
             

@@ -1,5 +1,5 @@
 import React, { useState, useEffect} from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, Navigate, useNavigate } from 'react-router-dom'
 import Alert from '../components/Alert'
 import axiosClient from '../config/AxiosConfig'
 import useAuth from '../hooks/UseAuth'
@@ -11,6 +11,7 @@ const Login = () => {
   const [Notify, setNotify] = useState('')
 
   const {setAuth} = useAuth();
+  const navigate = useNavigate();
 
 
 
@@ -36,7 +37,8 @@ const Login = () => {
       });
 
      localStorage.setItem('token', response.data?.token)
-     setAuth(response.data)
+     
+     navigate('/projects')
 
   
       
