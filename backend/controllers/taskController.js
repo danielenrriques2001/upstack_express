@@ -98,14 +98,53 @@ const deleteTask = async (req, res ) => {
     }
 
     try {
-        await task.deleteOne();
+
+        const project  = await Project.findById(task.project);
+        project.tasks.pull(task._id);
+        await Promise.allSettled([await project.save(), await task.deleteOne() ])
+
         res.json({message: 'Task successfully deleted' })
     } catch (error) {
         console.log(error)
     }
 }
 
-const changeTaskStatus = (req, res ) => {
+const changeTaskStatus =  async (req, res ) => {
+    const {id} = req.params;
+
+    const task = await Task
+    .findById(id)
+    .populate('project');
+
+    if(!task) {
+        return res.status(404).json({message: 'Not found'})
+    }
+
+    if(task.project.owner.toString() !== req.user._id.toString() && 
+    !task.project.collaborators.some( 
+    (collaborator) => collaborator._id.toString() === req.user._id.toString()
+
+    )) {
+        const error = new Error('You dont have the rights ')
+        return res.status(404).json({message: error.message })
+    }
+
+    task.status = !task.status;
+    task.completed = req.user._id;
+    
+    await task.save();
+
+    const storedTask = await Task
+    .findById(id)
+    .populate('project')
+    .populate('completed');
+    res.json(storedTask);
+
+
+
+
+
+
     
 }
 
