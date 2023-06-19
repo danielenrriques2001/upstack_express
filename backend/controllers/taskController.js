@@ -81,8 +81,6 @@ const deleteTask = async (req, res ) => {
     
     const task = await Task.findById(id).populate('project');
 
-    console.log(req.user._id)
-    console.log(task.project.owner)
 
 
 
@@ -103,7 +101,7 @@ const deleteTask = async (req, res ) => {
         project.tasks.pull(task._id);
         await Promise.allSettled([await project.save(), await task.deleteOne() ])
 
-        res.json({message: 'Task successfully deleted' })
+        res.json({message: 'Task successfully deleted', task  })
     } catch (error) {
         console.log(error)
     }
