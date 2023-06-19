@@ -259,20 +259,15 @@ const ProjectProvider = ({children}) => {
             } else {
                 const { data } = await axiosClient.put(`/tasks/${task.id}`, task, config);
 
-               
-
-                setProject(updatedProject)
                 SetNotify({})
                 setModal(false)
 
-                socket.emit('edit task', data)
+                socket.emit('edit task', data.data)
+
             }   
           
         
-                const updatedProject = {...project};
-                updatedProject.tasks = [data.data, ...project.tasks, ];
-
-                setProject(updatedProject)
+            
                 SetNotify({})
                 setModal(false)
 
@@ -552,6 +547,16 @@ const ProjectProvider = ({children}) => {
         setProject(updatedProject);
 
     }
+
+    const handleSocketEditTask = task => {
+
+        const updatedProject = {...project};
+
+        updatedProject.tasks =  updatedProject.tasks.map(taskstate => taskstate._id === task._id ? task : item);
+
+        setProject(updatedProject)
+    
+    }
     return (
         <ProjectContext.Provider
             value={{
@@ -585,7 +590,8 @@ const ProjectProvider = ({children}) => {
                 handleSearcher,
                 searcher,
                 handleSocketCreateTask,
-                handleSocketDeleteTask
+                handleSocketDeleteTask,
+                handleSocketEditTask
             }}
         >
 
