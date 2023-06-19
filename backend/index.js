@@ -66,11 +66,15 @@ io.on('connection', (socket) => {
         socket.to(task.data.project).emit('task added', task.data)
     })
     socket.on('delete task', (task) => {     
-        console.log(task)  
-
-        
         socket.to(task.project._id).emit('task deleted', task)
     })
+    socket.on('edit task', (task) => {     
+
+        console.log(task)
+
+        socket.to(task.project._id).emit('task edited', task)
+    })
+
 
 
 }) 
