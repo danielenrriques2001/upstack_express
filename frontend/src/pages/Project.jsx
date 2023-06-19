@@ -10,6 +10,9 @@ import Collaborator from "../components/Collaborator";
 import ModalDeleteCollaborator from "../components/ModalDeleteCollaborator";
 import UseAdmin from "../hooks/UseAdmin";
 import UseAuth from "../hooks/UseAuth";
+import io from 'socket.io-client'
+
+let socket; 
 
 const Project = () => {
 
@@ -23,7 +26,9 @@ const Project = () => {
     handleOpenModal, 
     handleDeleteTask, 
     modalDelete, 
-    Notify
+    Notify,
+    handleSocketCreateTask,
+    handleSocketDeleteTask,
     } = UseProject();
 
   const params = useParams(); 
@@ -36,6 +41,35 @@ const Project = () => {
       setLoading(true)
       getProject(params.id)
   }, [])
+
+  useEffect(() => {
+    socket = io(import.meta.env.VITE_BACKEND_URL),
+    socket.emit('open project', params.id);
+
+  }, [])
+
+  useEffect(() => {
+
+    socket.on('task added', (newTask) => {
+      if(newTask.project === project._id) {
+              handleSocketCreateTask(newTask)
+
+      }
+    })
+
+    socket.on('task deleted', (deletedTask) => {
+
+      if(deletedTask.project._id === project._id) {
+         handleSocketDeleteTask(deletedTask)
+      } 
+     
+    })
+
+  
+
+  })
+  
+  
 
   const {message} = Notify;
   

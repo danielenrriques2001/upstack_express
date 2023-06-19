@@ -34,7 +34,10 @@ const AuthProvider = ({children}) => {
                 
               setAuth(response.data);
 
-              navigate('/projects');
+              if(response.data._id && location.pathname === '/') {
+                navigate('/projects')
+            }
+
 
              
 

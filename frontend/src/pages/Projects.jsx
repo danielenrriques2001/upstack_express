@@ -1,12 +1,16 @@
-import React, { Fragment } from 'react'
+import React, { Fragment, useEffect } from 'react'
 import UseProject from '../hooks/UseProject'
 import PreviewProject from '../components/PreviewProject';
 
+
 const Projects = () => {
+
+
 
   const {projects} = UseProject();
 
-  
+
+
   return (
   <Fragment>
       <h1 className='text-4xl text-gray-800 font-black  p-5'>Projects</h1>

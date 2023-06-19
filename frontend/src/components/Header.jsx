@@ -1,7 +1,13 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
+import UseProject from '../hooks/UseProject'
+import Search from './Search'
+
 
 const Header = () => {
+
+  const {handleSearcher} = UseProject();
+
   return (
     <header className='px-4 py-5 bg-white border-b '>
       <div className='md:flex md:justify-between'>
@@ -9,13 +15,17 @@ const Header = () => {
           Uptask 
         </h2>
 
-        <input
-          type='search'
-          placeholder='Search Project'
-          className='rounded-lg w-96 block p-2 border'
-        />
+       
 
         <div className='flex justify-center items-center gap-3'>
+
+        <button
+          type='button'
+          onClick={() => {handleSearcher()}}
+          className='font-bold uppercase transition-all'
+        >Search Project
+        </button>
+
             <Link
               to={'/projects'}
               className='text-white bg-sky-600 p-3 rounded-md uppercase font-bold hover:bg-red-500 transition-colors'
@@ -28,6 +38,8 @@ const Header = () => {
               >
                 Log Out
               </button>
+
+              <Search/>
         </div>
       </div>
 

@@ -1,7 +1,8 @@
 import { createContext, useEffect, useState } from "react";
 import axiosClient from "../config/AxiosConfig";
 import { useNavigate } from "react-router-dom";
-
+import io from 'socket.io-client'
+let socket;
 
 const ProjectContext = createContext();
 
@@ -24,6 +25,7 @@ const ProjectProvider = ({children}) => {
     const [modalDeleteCollaborator, setModalDeleteCollaborator] = useState(false);
     
     const [collaborator, setCollaborator] = useState({});
+    const [searcher, setSearcher] = useState(false);
 
 
 
@@ -68,6 +70,12 @@ const ProjectProvider = ({children}) => {
 
 
     }, [])
+
+    useEffect(() => {
+        socket = io(import.meta.env.VITE_BACKEND_URL);
+
+    }, [])
+    
 
     
 
@@ -242,23 +250,22 @@ const ProjectProvider = ({children}) => {
                     error: false,
                 })
 
-                const updatedProject = {...project};
-                updatedProject.tasks = [data.data, ...project.tasks, ];
-
-                setProject(updatedProject)
+               
                 SetNotify({})
                 setModal(false)
+                socket.emit('new task', data)
 
                 
             } else {
                 const { data } = await axiosClient.put(`/tasks/${task.id}`, task, config);
 
-                const updatedProject = {...project};
-                updatedProject.tasks = [data.data, ...project.tasks, ];
+               
 
                 setProject(updatedProject)
                 SetNotify({})
                 setModal(false)
+
+                socket.emit('edit task', data)
             }   
           
         
@@ -283,6 +290,39 @@ const ProjectProvider = ({children}) => {
         setModal(true)
         setIsEditing(true)
 
+    }
+    const deleteTask = async () => {
+        const token = localStorage.getItem('token');
+
+        if(!token) return 
+
+        const config = {
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`
+            }
+        }
+
+        try {
+            const response = await axiosClient.delete(`/tasks/${task._id}`,config);
+
+           
+
+            handleNotify({
+                message: response?.data?.message,
+                error: false,
+            })
+
+            handleCloseModalTask();
+            setTask({});
+            socket.emit('delete task', response.data?.task)
+
+        
+
+    
+        } catch (error) {
+          console.log(error)
+        } 
     }
 
     const handleCloseModal = () => {
@@ -309,47 +349,7 @@ const ProjectProvider = ({children}) => {
     }
 
 
-    const deleteTask = async () => {
-        const token = localStorage.getItem('token');
 
-        if(!token) return 
-
-        const config = {
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${token}`
-            }
-        }
-
-        try {
-            const response = await axiosClient.delete(`/tasks/${task._id}`,config);
-
-            console.log(response)
-
-            handleNotify({
-                message: response?.data?.message,
-                error: false,
-            })
-
-           
-
-
-          
-            handleCloseModalTask();
-            setTask({});
-
-
-            const updatedProject = {...project} 
-
-            updatedProject.tasks = updatedProject.tasks.filter(taskState => taskState._id !== task._id);
-
-            setProject(updatedProject);
-
-    
-        } catch (error) {
-          console.log(error)
-        } 
-    }
 
     const handleSubmitCollaborator = async email => {
 
@@ -527,6 +527,31 @@ const ProjectProvider = ({children}) => {
         }
 
     }
+
+    const handleSearcher = () => {
+        setSearcher(!searcher)
+    }
+
+    const handleSocketCreateTask = task => {
+
+        const updatedProject = {...project};
+        updatedProject.tasks = [task, ...project.tasks];
+
+        setProject(updatedProject)
+
+
+
+    }
+
+    const handleSocketDeleteTask = task => {
+
+        const updatedProject = {...project} 
+
+        updatedProject.tasks = updatedProject.tasks.filter(taskState => taskState._id !== task._id);
+
+        setProject(updatedProject);
+
+    }
     return (
         <ProjectContext.Provider
             value={{
@@ -556,7 +581,11 @@ const ProjectProvider = ({children}) => {
                 handleDeleteCollaborator,
                 modalDeleteCollaborator,
                 deleteCollaborator,
-                completeTask
+                completeTask,
+                handleSearcher,
+                searcher,
+                handleSocketCreateTask,
+                handleSocketDeleteTask
             }}
         >
 
