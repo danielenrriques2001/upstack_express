@@ -499,6 +499,8 @@ const ProjectProvider = ({children}) => {
         try {
             const {data} = await axiosClient.post(`/tasks/status/${id}`, {}, config)
 
+            socket.emit('change status', data)
+
             
 
 
@@ -508,11 +510,7 @@ const ProjectProvider = ({children}) => {
                 error: false,
             })
 
-            const updatedProject = {...project} 
-
-            updatedProject.tasks = updatedProject.tasks.map(taskState => taskState._id === data._id ? data : taskState);
-
-            setProject(updatedProject);
+           
             setTask({})
             SetNotify({})
 
@@ -530,8 +528,8 @@ const ProjectProvider = ({children}) => {
     const handleSocketCreateTask = task => {
 
         const updatedProject = {...project};
-        updatedProject.tasks = [task, ...project.tasks];
-
+        updatedProject.tasks = [...project.tasks, task];
+        
         setProject(updatedProject)
 
 
@@ -552,10 +550,21 @@ const ProjectProvider = ({children}) => {
 
         const updatedProject = {...project};
 
-        updatedProject.tasks =  updatedProject.tasks.map(taskstate => taskstate._id === task._id ? task : item);
+        updatedProject.tasks =  updatedProject.tasks.map(taskstate => taskstate._id === task._id ? task : taskstate);
 
         setProject(updatedProject)
+
     
+    }
+
+    const handleSocketChangeStatus = task => {
+
+        const updatedProject = {...project} 
+
+        updatedProject.tasks = updatedProject.tasks.map(taskState => taskState._id === task._id ? task : taskState);
+
+        setProject(updatedProject);
+
     }
     return (
         <ProjectContext.Provider
@@ -591,7 +600,8 @@ const ProjectProvider = ({children}) => {
                 searcher,
                 handleSocketCreateTask,
                 handleSocketDeleteTask,
-                handleSocketEditTask
+                handleSocketEditTask,
+                handleSocketChangeStatus
             }}
         >
 

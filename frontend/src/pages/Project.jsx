@@ -29,7 +29,8 @@ const Project = () => {
     Notify,
     handleSocketCreateTask,
     handleSocketDeleteTask,
-    handleSocketEditTask
+    handleSocketEditTask,
+    handleSocketChangeStatus
     } = UseProject();
 
   const params = useParams(); 
@@ -52,9 +53,7 @@ const Project = () => {
   useEffect(() => {
 
     socket.on('task added', (newTask) => {
-     
               handleSocketCreateTask(newTask)
-  
     })
 
     socket.on('task deleted', (deletedTask) => {
@@ -64,9 +63,14 @@ const Project = () => {
     socket.on('task edited', (editedTask) => {
 
         handleSocketEditTask(editedTask)
-    
-     
     })
+
+    socket.on('status changed', (task) => {
+
+      handleSocketChangeStatus(task)
+  
+   
+  })
 
   
 
