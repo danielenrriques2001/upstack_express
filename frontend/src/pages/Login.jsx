@@ -10,7 +10,7 @@ const Login = () => {
   const [password, setPassword] = useState('')
   const [Notify, setNotify] = useState('')
 
-  const {setAuth} = useAuth();
+  const {setAuth, AuthUser} = useAuth();
   const navigate = useNavigate();
 
 
@@ -36,9 +36,11 @@ const Login = () => {
        email, password
       });
 
-     localStorage.setItem('token', response.data?.token)
-     
-     navigate('/projects')
+     localStorage.setItem('token', response.data?.token);
+
+     AuthUser();
+
+
 
   
       

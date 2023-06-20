@@ -12,51 +12,48 @@ const AuthProvider = ({children}) => {
     const [loading, setloading] = useState(true);
     const navigate = useNavigate();
 
-    useEffect(() => {
+    const AuthUser = async () => {
+        const token = localStorage.getItem('token');
 
-        const AuthUser = async () => {
-            const token = localStorage.getItem('token');
-
-            if(!token) {
-                setloading(false)
-                return 
-            }
-
-            const config = {
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${token}`
-                }
-            }
-
-            try {
-              const response = await axiosClient('/users/profile', config);
-                
-              setAuth(response.data);
-
-              if(response.data._id && location.pathname === '/') {
-                navigate('/projects')
-            }
-
-
-             
-
-            } catch (error) {
-               setAuth({})
-            } finally {
-                setloading(false)
-              
-            }
-
-            
+        if(!token) {
+            setloading(false)
+            return 
         }
 
-        AuthUser();
+        const config = {
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`
+            }
+        }
+
+        try {
+          const response = await axiosClient('/users/profile', config);
+          
+          setAuth(response.data);
+          navigate('/projects')
+    
+        
+        
+        }
+         catch (error) {
+           setAuth({})
+        } finally {
+            setloading(false)
+          
+        }
 
         
+    }
 
-
+    useEffect(() => {
+        AuthUser();
     }, [])
+
+
+    const CloseSectionAuth = () => {
+        setAuth({});
+    }
     
 
     return (
@@ -64,7 +61,9 @@ const AuthProvider = ({children}) => {
             value={{
                 setAuth,
                 auth,
-                loading
+                loading,
+                CloseSectionAuth,
+                AuthUser
             }}
         >
 

@@ -2,6 +2,7 @@ import { createContext, useEffect, useState } from "react";
 import axiosClient from "../config/AxiosConfig";
 import { useNavigate } from "react-router-dom";
 import io from 'socket.io-client'
+import UseAuth from "../hooks/UseAuth";
 let socket;
 
 const ProjectContext = createContext();
@@ -27,9 +28,12 @@ const ProjectProvider = ({children}) => {
     const [collaborator, setCollaborator] = useState({});
     const [searcher, setSearcher] = useState(false);
 
+    const {auth} = UseAuth();
+
 
 
     const navigate = useNavigate();
+
 
 
     const handleNotify = notify => {
@@ -69,7 +73,7 @@ const ProjectProvider = ({children}) => {
         
 
 
-    }, [])
+    }, [auth])
 
     useEffect(() => {
         socket = io(import.meta.env.VITE_BACKEND_URL);
@@ -500,11 +504,7 @@ const ProjectProvider = ({children}) => {
             const {data} = await axiosClient.post(`/tasks/status/${id}`, {}, config)
 
             socket.emit('change status', data)
-
             
-
-
-
             handleNotify({
                 message: data?.message,
                 error: false,
@@ -566,6 +566,12 @@ const ProjectProvider = ({children}) => {
         setProject(updatedProject);
 
     }
+
+    const CloseSectionProject = () => {
+        setProjects({})
+        setProject({})
+        SetNotify({})
+    }
     return (
         <ProjectContext.Provider
             value={{
@@ -601,7 +607,8 @@ const ProjectProvider = ({children}) => {
                 handleSocketCreateTask,
                 handleSocketDeleteTask,
                 handleSocketEditTask,
-                handleSocketChangeStatus
+                handleSocketChangeStatus,
+                CloseSectionProject
             }}
         >
 

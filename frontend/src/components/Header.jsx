@@ -2,11 +2,22 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import UseProject from '../hooks/UseProject'
 import Search from './Search'
-
+import UseAuth from '../hooks/UseAuth'
 
 const Header = () => {
 
-  const {handleSearcher} = UseProject();
+  const {handleSearcher, CloseSectionProject, } = UseProject();
+  const {CloseSectionAuth} = UseAuth();
+
+
+  const handleCloseSection = () => {
+
+    CloseSectionProject();
+    CloseSectionAuth();
+    localStorage.removeItem('token')
+
+
+  }
 
   return (
     <header className='px-4 py-5 bg-white border-b '>
@@ -33,6 +44,7 @@ const Header = () => {
               </Link>
               <button
                 type='button'
+                onClick={() => {handleCloseSection()}}
                
                 className='font-semibold uppercase bg-slate-300 p-3 rounded-md hover:bg-slate-400 transition-all'
               >
