@@ -39,7 +39,6 @@ const createTask = async (req, res ) => {
         await projectExists.save();
 
 
-
         return res.status(200).json({message: 'Task has been save successfully', data: storedTask})
     } catch (error) {
         console.log(error)
@@ -80,9 +79,6 @@ const deleteTask = async (req, res ) => {
     const {id} = req.params;
     
     const task = await Task.findById(id).populate('project');
-
-
-
 
     if(!task) {
         return res.status(404).json({message: 'Not found'})

@@ -62,17 +62,28 @@ io.on('connection', (socket) => {
     
     })
 
+    
+
     socket.on('new task', (task) => {       
+
         socket.to(task.data.project).emit('task added', task.data)
+
     })
     socket.on('delete task', (task) => {     
-        socket.to(task.project._id).emit('task deleted', task)
+        (typeof task.project === 'string') 
+            ? socket.io(task.project).emit('task deleted', task) 
+            : socket.to(task.project?._id).emit('task deleted', task)
+
     })
     socket.on('edit task', (task) => {     
-
-        console.log(task)
-
+        console.log('this is the edit task', task)
         socket.to(task.project._id).emit('task edited', task)
+    })
+
+    socket.on('change status', (task) => {     
+        
+
+        socket.to(task.project._id).emit('status changed', task)
     })
 
 
