@@ -12,6 +12,7 @@ const AuthProvider = ({children}) => {
     const [loading, setloading] = useState(true);
     const navigate = useNavigate();
 
+
     const AuthUser = async () => {
         const token = localStorage.getItem('token');
 
@@ -31,7 +32,6 @@ const AuthProvider = ({children}) => {
           const response = await axiosClient('/users/profile', config);
           
           setAuth(response.data);
-          navigate('/projects')
     
         
         
@@ -47,7 +47,8 @@ const AuthProvider = ({children}) => {
     }
 
     useEffect(() => {
-        AuthUser();
+        
+        AuthUser(); 
     }, [])
 
 
@@ -63,7 +64,7 @@ const AuthProvider = ({children}) => {
                 auth,
                 loading,
                 CloseSectionAuth,
-                AuthUser
+            
             }}
         >
 

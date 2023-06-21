@@ -30,8 +30,6 @@ const ProjectProvider = ({children}) => {
 
     const {auth} = UseAuth();
 
-
-
     const navigate = useNavigate();
 
 

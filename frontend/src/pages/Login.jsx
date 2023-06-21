@@ -31,17 +31,12 @@ const Login = () => {
 
     try {
 
-      const response = await axiosClient.post(`/users/login`, 
-      {
-       email, password
-      });
+      const response = await axiosClient.post(`/users/login`, {email, password});
 
-     localStorage.setItem('token', response.data?.token);
-
-     AuthUser();
-
-
-
+      setNotify({})
+      localStorage.setItem('token', response.data.token);
+      setAuth(response.data);
+      navigate('/projects')
   
       
     } catch (error) {
